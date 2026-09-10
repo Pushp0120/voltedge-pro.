@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VoltEdge Pro | Intelligent Grid & Energy Monitor</title>
   
-  <!-- Plus Jakarta Sans & JetBrains Mono -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,7 +20,8 @@
       --bg-surface: #f8fafc;
       --card-bg: #ffffff;
       --card-border: #e2e8f0;
-      --primary: #0284c7;
+      --primary: #0070f3;
+      --primary-hover: #005bb5;
       --primary-soft: #e0f2fe;
       --success: #059669;
       --success-soft: #d1fae5;
@@ -30,10 +31,8 @@
       --warning-soft: #fef3c7;
       --text-main: #0f172a;
       --text-muted: #64748b;
-      --text-dim: #94a3b8;
-      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06);
       --font-mono: "JetBrains Mono", monospace;
     }
 
@@ -42,7 +41,7 @@
     body {
       background-color: var(--bg-surface);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.05) 0px, transparent 50%),
+        radial-gradient(at 0% 0%, rgba(0, 112, 243, 0.05) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.04) 0px, transparent 50%);
       background-attachment: fixed;
       color: var(--text-main);
@@ -68,11 +67,7 @@
       padding-bottom: 12px;
       border-bottom: 1px solid var(--card-border);
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; }
     .brand-icon {
       width: 42px;
       height: 42px;
@@ -87,12 +82,16 @@
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #0f172a;
     }
     .brand-title p {
       font-size: 0.8rem;
       color: var(--text-muted);
-      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .status-container {
@@ -117,6 +116,10 @@
       box-shadow: 0 0 8px var(--success);
       animation: ripple 2s infinite ease-out;
     }
+    .pulse-dot.warning {
+      background: var(--warning);
+      box-shadow: 0 0 8px var(--warning);
+    }
     @keyframes ripple {
       0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.7); }
       70% { box-shadow: 0 0 0 8px rgba(5, 150, 105, 0); }
@@ -129,19 +132,34 @@
       text-transform: uppercase;
     }
 
+    .btn-settings {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      padding: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-settings:hover {
+      color: var(--primary);
+      border-color: #cbd5e1;
+      transform: rotate(30deg);
+    }
+
     #overloadAlert {
       display: none;
       background: var(--danger-soft);
       border-left: 4px solid var(--danger);
-      border-top: 1px solid #fecdd3;
-      border-right: 1px solid #fecdd3;
-      border-bottom: 1px solid #fecdd3;
       border-radius: 10px;
       padding: 14px 20px;
       font-size: 0.9rem;
       font-weight: 600;
       color: var(--danger);
-      box-shadow: var(--shadow-sm);
       animation: alertPulse 1.2s infinite ease-in-out;
     }
     @keyframes alertPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.65; } }
@@ -157,12 +175,11 @@
       border-radius: 16px;
       padding: 22px;
       box-shadow: var(--shadow-sm);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .card:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-md);
-      border-color: #cbd5e1;
     }
     .card-top {
       display: flex;
@@ -190,7 +207,6 @@
       font-size: 2rem;
       font-weight: 700;
       letter-spacing: -0.03em;
-      color: var(--text-main);
       display: flex;
       align-items: baseline;
       gap: 5px;
@@ -206,9 +222,7 @@
       background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
       border-color: #bae6fd;
     }
-    .card-billing .card-val {
-      color: #0369a1;
-    }
+    .card-billing .card-val { color: #0369a1; }
 
     .panel {
       background: var(--card-bg);
@@ -225,42 +239,6 @@
       align-items: center;
       gap: 16px;
     }
-    .input-fields {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .input-group label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-    }
-    .input-wrapper input {
-      background: #f8fafc;
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
-      font-weight: 600;
-      padding: 9px 14px;
-      border-radius: 8px;
-      width: 150px;
-      transition: all 0.2s ease;
-      outline: none;
-    }
-    .input-wrapper input:focus {
-      background: #ffffff;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
-    }
-
     .btn-export {
       display: flex;
       align-items: center;
@@ -273,31 +251,126 @@
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
-      transition: all 0.2s ease;
     }
-    .btn-export:hover {
-      background: #0369a1;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.35);
+    .btn-export:hover { background: #0369a1; }
+
+    .chart-container { position: relative; height: 330px; width: 100%; }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 24px;
+      padding: 28px 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalPop {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
-    .chart-header {
+    .modal-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+
+    .form-group {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
+      flex-direction: column;
+      gap: 6px;
     }
-    .chart-header h3 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #64748b;
     }
-    .chart-container {
+    .input-field-wrap {
       position: relative;
-      height: 330px;
-      width: 100%;
+      display: flex;
+      align-items: center;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 0 14px;
+      transition: all 0.2s ease;
     }
+    .input-field-wrap:focus-within {
+      background: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.15);
+    }
+    .input-prefix {
+      color: #64748b;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+    .modal-card input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 12px 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #0f172a;
+      font-family: inherit;
+    }
+    .modal-card input::placeholder {
+      color: #94a3b8;
+    }
+
+    .btn-save-config {
+      background: #0070f3;
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 112, 243, 0.25);
+      transition: all 0.2s ease;
+      margin-top: 6px;
+    }
+    .btn-save-config:hover {
+      background: #005bb5;
+      transform: translateY(-1px);
+    }
+
+    .btn-cancel-config {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: center;
+    }
+    .btn-cancel-config:hover { color: #0f172a; }
 
     .toast {
       position: fixed;
@@ -308,17 +381,12 @@
       padding: 12px 22px;
       border-radius: 10px;
       font-size: 0.85rem;
-      font-weight: 500;
-      box-shadow: var(--shadow-lg);
       transform: translateY(100px);
       opacity: 0;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 1000;
+      transition: all 0.3s ease;
+      z-index: 3000;
     }
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
+    .toast.show { transform: translateY(0); opacity: 1; }
   </style>
 </head>
 <body>
@@ -328,23 +396,29 @@
     <header>
       <div class="brand">
         <div class="brand-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
         <div class="brand-title">
           <h1>VoltEdge Pro</h1>
           <p>IoT Smart Energy & Grid Intelligence</p>
         </div>
       </div>
-      <div class="status-container">
-        <div id="statusDot" class="pulse-dot"></div>
-        <span id="statusText" class="status-text" style="color: var(--text-muted);">CONNECTING</span>
+      <div class="header-actions">
+        <div class="status-container">
+          <div id="statusDot" class="pulse-dot warning"></div>
+          <span id="statusText" class="status-text" style="color: var(--text-muted);">SETUP REQUIRED</span>
+        </div>
+        <button class="btn-settings" onclick="openSettingsModal()" title="System Settings">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
       </div>
     </header>
 
     <div id="overloadAlert">
-      ⚠️ CRITICAL LOAD ALERT: Real-time consumption exceeds safety cutoff! Tripping hardware breaker.
+      ⚠️ CRITICAL LOAD ALERT: Real-time consumption exceeds safety cutoff!
     </div>
 
+    <!-- Live Parameters Grid -->
     <div class="metrics-grid">
       <div class="card">
         <div class="card-top">
@@ -399,36 +473,27 @@
       <div class="card card-billing">
         <div class="card-top">
           <span class="card-label" style="color: #0369a1;">Estimated Bill</span>
-          <span style="font-size: 0.72rem; font-weight: 700; color: #0284c7; background: #ffffff; padding: 3px 8px; border-radius: 4px; box-shadow: var(--shadow-sm);">LIVE</span>
+          <span id="rateBadge" style="font-size: 0.72rem; font-weight: 700; color: #0284c7; background: #ffffff; padding: 3px 8px; border-radius: 4px;">₹7.50/UNIT</span>
         </div>
         <div class="card-val">₹<span id="valBill">0.00</span></div>
       </div>
     </div>
 
+    <!-- Action Bar -->
     <div class="panel controls-bar">
-      <div class="input-fields">
-        <div class="input-group">
-          <label>Tariff Rate (₹ / kWh)</label>
-          <div class="input-wrapper">
-            <input type="number" id="tariffRate" value="7.50" step="0.25" min="0" oninput="recalculateBill()" />
-          </div>
-        </div>
-        <div class="input-group">
-          <label>Cutoff Limit (W)</label>
-          <div class="input-wrapper">
-            <input type="number" id="overloadThreshold" value="2500" step="100" />
-          </div>
-        </div>
+      <div style="font-size: 0.88rem; color: var(--text-muted);">
+        Database Host: <strong id="activeNodeText" style="color: var(--text-main); font-family: var(--font-mono);">Not Configured</strong>
       </div>
       <button class="btn-export" onclick="exportCSV()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Export CSV Log
       </button>
     </div>
 
+    <!-- Real-Time Power Curve -->
     <div class="panel">
-      <div class="chart-header">
-        <h3>Real-Time Power Curve</h3>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <h3 style="font-size: 1.05rem; font-weight: 700;">Real-Time Power Curve</h3>
         <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); font-weight: 600;">25 READINGS BUFFER</span>
       </div>
       <div class="chart-container">
@@ -438,33 +503,57 @@
 
   </div>
 
-  <div id="toast" class="toast">CSV Log Downloaded Successfully</div>
+  <!-- System Settings Modal -->
+  <div id="settingsModal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 class="modal-title">System Settings</h2>
+      
+      <div class="form-group">
+        <label>Electricity Rate (Per Unit)</label>
+        <div class="input-field-wrap">
+          <span class="input-prefix">₹</span>
+          <input type="number" id="settingTariff" step="0.1" placeholder="e.g. 7.50" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Firebase API Key</label>
+        <div class="input-field-wrap">
+          <input type="text" id="settingApiKey" placeholder="API Key" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Database URL</label>
+        <div class="input-field-wrap">
+          <input type="text" id="settingDbUrl" placeholder="https://..." />
+        </div>
+      </div>
+
+      <button class="btn-save-config" onclick="saveConfiguration()">Save Configuration</button>
+      <button class="btn-cancel-config" onclick="closeSettingsModal()">Cancel</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Configuration saved successfully!</div>
 
   <script>
-    // ==========================================
-    // 1. FIREBASE CONFIGURATION (PRE-FILLED)
-    // ==========================================
-    const firebaseConfig = {
-      apiKey: "AIzaSyBaoU-JAXomAP4lXD-Rzo_n5LPxR2CA0ao",
-      authDomain: "voltedge-pro.firebaseapp.com",
-      databaseURL: "https://voltedge-pro-default-rtdb.firebaseio.com",
-      projectId: "voltedge-pro",
-      storageBucket: "voltedge-pro.firebasestorage.app",
-      messagingSenderId: "901292342568",
-      appId: "1:901292342568:web:daeef554e4acccc713641d",
-      measurementId: "G-TZK1R4HRF3"
+    // 1. DYNAMIC USER STORAGE (NO HARDCODED SECRETS)
+    let appConfig = {
+      apiKey: localStorage.getItem('fb_apiKey') || "",
+      databaseURL: localStorage.getItem('fb_dbUrl') || "",
+      tariff: parseFloat(localStorage.getItem('sys_tariff')) || 7.50
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
 
-    // ==========================================
-    // 2. CHART.JS INITIALIZATION
-    // ==========================================
+    let app = null;
+    let db = null;
+    let dbListener = null;
+
+    // 2. CHART SETUP
     const ctx = document.getElementById('liveChart').getContext('2d');
-    
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(2, 132, 199, 0.25)');
-    gradient.addColorStop(1, 'rgba(2, 132, 199, 0.01)');
+    gradient.addColorStop(0, 'rgba(0, 112, 243, 0.22)');
+    gradient.addColorStop(1, 'rgba(0, 112, 243, 0.01)');
 
     const liveChart = new Chart(ctx, {
       type: 'line',
@@ -472,13 +561,10 @@
         labels: [],
         datasets: [{
           data: [],
-          borderColor: '#0284c7',
+          borderColor: '#0070f3',
           borderWidth: 2.2,
           pointBackgroundColor: '#ffffff',
-          pointBorderColor: '#0284c7',
-          pointBorderWidth: 2,
-          pointRadius: 3,
-          pointHoverRadius: 5,
+          pointBorderColor: '#0070f3',
           fill: true,
           backgroundColor: gradient,
           tension: 0.35
@@ -487,93 +573,153 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: '#0f172a',
-            titleColor: '#ffffff',
-            bodyColor: '#e2e8f0',
-            titleFont: { family: 'Plus Jakarta Sans', size: 12 },
-            bodyFont: { family: 'JetBrains Mono', size: 13 },
-            padding: 10,
-            cornerRadius: 8
-          }
-        },
+        plugins: { legend: { display: false } },
         scales: {
-          x: {
-            grid: { color: '#f1f5f9' },
-            ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } }
-          },
-          y: {
-            grid: { color: '#f1f5f9' },
-            ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } },
-            beginAtZero: true
-          }
+          x: { grid: { color: '#f1f5f9' }, ticks: { color: '#94a3b8' } },
+          y: { grid: { color: '#f1f5f9' }, ticks: { color: '#94a3b8' }, beginAtZero: true }
         }
       }
     });
 
-    // ==========================================
-    // 3. TELEMETRY LISTENER & BILLING
-    // ==========================================
     const historyLog = [];
     let lastSeen = 0;
     let latestEnergy = 0;
 
-    db.ref('/energy_meter').on('value', (snapshot) => {
-      const data = snapshot.val();
-      if (!data) return;
-
-      lastSeen = Date.now();
-      latestEnergy = Number(data.energy || 0);
-
-      document.getElementById('valVoltage').innerText = Number(data.voltage || 0).toFixed(1);
-      document.getElementById('valCurrent').innerText = Number(data.current || 0).toFixed(2);
-      document.getElementById('valPower').innerText   = Number(data.power || 0).toFixed(1);
-      document.getElementById('valPf').innerText      = Number(data.pf || 0).toFixed(2);
-      document.getElementById('valEnergy').innerText  = latestEnergy.toFixed(3);
-      
-      recalculateBill();
-
-      const cutoff = parseFloat(document.getElementById('overloadThreshold').value) || 2500;
-      const alertBar = document.getElementById('overloadAlert');
-      if (data.power > cutoff || data.overload === true) {
-        alertBar.style.display = 'block';
-      } else {
-        alertBar.style.display = 'none';
+    // 3. FIREBASE CONNECTOR
+    function initFirebase() {
+      if (!appConfig.apiKey || !appConfig.databaseURL) {
+        document.getElementById('activeNodeText').innerText = "Waiting for configuration...";
+        openSettingsModal();
+        return;
       }
 
-      const timeLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      liveChart.data.labels.push(timeLabel);
-      liveChart.data.datasets[0].data.push(Number(data.power || 0));
+      try {
+        // Clean URL formatting
+        let formattedUrl = appConfig.databaseURL.trim();
+        if (!formattedUrl.startsWith("https://")) {
+          formattedUrl = "https://" + formattedUrl;
+        }
+        if (formattedUrl.endsWith("/")) {
+          formattedUrl = formattedUrl.slice(0, -1);
+        }
 
-      if (liveChart.data.labels.length > 25) {
-        liveChart.data.labels.shift();
-        liveChart.data.datasets[0].data.shift();
+        document.getElementById('activeNodeText').innerText = formattedUrl.replace("https://", "");
+
+        if (firebase.apps.length > 0) {
+          firebase.app().delete();
+        }
+
+        app = firebase.initializeApp({
+          apiKey: appConfig.apiKey.trim(),
+          databaseURL: formattedUrl
+        });
+
+        db = firebase.database();
+        attachFirebaseListener();
+      } catch (err) {
+        console.error("Firebase connection error:", err);
+        showToast("Invalid Configuration. Please verify keys.");
       }
-      liveChart.update('none');
-
-      historyLog.push({
-        timestamp: new Date().toISOString(),
-        voltage: data.voltage,
-        current: data.current,
-        power: data.power,
-        pf: data.pf,
-        energy: data.energy
-      });
-    });
-
-    function recalculateBill() {
-      const rate = parseFloat(document.getElementById('tariffRate').value) || 0;
-      document.getElementById('valBill').innerText = (latestEnergy * rate).toFixed(2);
     }
 
-    // ==========================================
-    // 4. HEARTBEAT / OFFLINE DETECTOR
-    // ==========================================
+    function attachFirebaseListener() {
+      if (!db) return;
+      
+      db.ref('/energy_meter').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        lastSeen = Date.now();
+        latestEnergy = Number(data.energy || 0);
+
+        document.getElementById('valVoltage').innerText = Number(data.voltage || 0).toFixed(1);
+        document.getElementById('valCurrent').innerText = Number(data.current || 0).toFixed(2);
+        document.getElementById('valPower').innerText   = Number(data.power || 0).toFixed(1);
+        document.getElementById('valPf').innerText      = Number(data.pf || 0).toFixed(2);
+        document.getElementById('valEnergy').innerText  = latestEnergy.toFixed(3);
+        
+        recalculateBill();
+
+        const alertBar = document.getElementById('overloadAlert');
+        alertBar.style.display = (data.power > 2500 || data.overload === true) ? 'block' : 'none';
+
+        const timeLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        liveChart.data.labels.push(timeLabel);
+        liveChart.data.datasets[0].data.push(Number(data.power || 0));
+
+        if (liveChart.data.labels.length > 25) {
+          liveChart.data.labels.shift();
+          liveChart.data.datasets[0].data.shift();
+        }
+        liveChart.update('none');
+
+        historyLog.push({
+          timestamp: new Date().toISOString(),
+          voltage: data.voltage,
+          current: data.current,
+          power: data.power,
+          pf: data.pf,
+          energy: data.energy
+        });
+      }, (error) => {
+        console.error("Database read rejected:", error);
+        showToast("Database Permission Denied. Check Rules!");
+      });
+    }
+
+    function recalculateBill() {
+      document.getElementById('valBill').innerText = (latestEnergy * appConfig.tariff).toFixed(2);
+      document.getElementById('rateBadge').innerText = `₹${appConfig.tariff.toFixed(2)}/UNIT`;
+    }
+
+    // 4. MODAL CONTROLS
+    function openSettingsModal() {
+      document.getElementById('settingTariff').value = appConfig.tariff || "";
+      document.getElementById('settingApiKey').value = appConfig.apiKey || "";
+      document.getElementById('settingDbUrl').value = appConfig.databaseURL || "";
+      document.getElementById('settingsModal').classList.add('active');
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('active');
+    }
+
+    function saveConfiguration() {
+      const newTariff = parseFloat(document.getElementById('settingTariff').value) || 7.50;
+      const newApiKey = document.getElementById('settingApiKey').value.trim();
+      const newDbUrl  = document.getElementById('settingDbUrl').value.trim();
+
+      if (!newApiKey || !newDbUrl) {
+        alert("Please enter both your Firebase API Key and Database URL.");
+        return;
+      }
+
+      appConfig.tariff = newTariff;
+      appConfig.apiKey = newApiKey;
+      appConfig.databaseURL = newDbUrl;
+
+      localStorage.setItem('sys_tariff', newTariff);
+      localStorage.setItem('fb_apiKey', newApiKey);
+      localStorage.setItem('fb_dbUrl', newDbUrl);
+
+      closeSettingsModal();
+      showToast("Settings Saved Successfully!");
+      recalculateBill();
+      initFirebase();
+    }
+
+    // 5. HEARTBEAT / STATUS
     setInterval(() => {
       const dot = document.getElementById('statusDot');
       const label = document.getElementById('statusText');
+
+      if (!appConfig.apiKey || !appConfig.databaseURL) {
+        dot.className = 'pulse-dot warning';
+        label.innerText = 'SETUP REQUIRED';
+        label.style.color = '#d97706';
+        return;
+      }
+
       const isOnline = (Date.now() - lastSeen) < 9000;
 
       if (isOnline) {
@@ -587,21 +733,16 @@
       }
     }, 2000);
 
-    // ==========================================
-    // 5. CSV EXPORT UTILITY
-    // ==========================================
     function exportCSV() {
       if (historyLog.length === 0) {
         showToast("No telemetry data gathered yet!");
         return;
       }
-
-      let csvContent = "Timestamp,Voltage_V,Current_A,ActivePower_W,PowerFactor,Energy_kWh\n";
+      let csv = "Timestamp,Voltage_V,Current_A,ActivePower_W,PowerFactor,Energy_kWh\n";
       historyLog.forEach(row => {
-        csvContent += `${row.timestamp},${row.voltage},${row.current},${row.power},${row.pf},${row.energy}\n`;
+        csv += `${row.timestamp},${row.voltage},${row.current},${row.power},${row.pf},${row.energy}\n`;
       });
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -609,7 +750,6 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
       showToast("CSV Log Downloaded Successfully");
     }
 
@@ -619,6 +759,10 @@
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 3000);
     }
+
+    // Initialize on launch
+    initFirebase();
+    recalculateBill();
   </script>
 </body>
 </html>
